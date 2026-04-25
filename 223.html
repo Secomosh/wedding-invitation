@@ -1,0 +1,474 @@
+<!DOCTYPE html>
+<html lang="ky">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <title>Байэл & Диля</title>
+
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: "Segoe UI", Arial, sans-serif;
+    }
+
+    html {
+      scroll-behavior: smooth;
+    }
+
+    body {
+      background: #050505;
+      color: white;
+      overflow-x: hidden;
+    }
+
+    /* Фон */
+    .bg {
+      position: fixed;
+      inset: 0;
+      background:
+        linear-gradient(rgba(0,0,0,0.55), rgba(0,0,0,0.95)),
+        url("https://images.unsplash.com/photo-1519741497674-611481863552?auto=format&fit=crop&w=1600&q=80");
+      background-size: cover;
+      background-position: center;
+      z-index: -2;
+    }
+
+    .blur-light {
+      position: fixed;
+      width: 300px;
+      height: 300px;
+      border-radius: 50%;
+      background: rgba(255, 77, 109, 0.35);
+      filter: blur(100px);
+      top: 80px;
+      left: -100px;
+      z-index: -1;
+    }
+
+    .blur-light.two {
+      top: auto;
+      left: auto;
+      right: -100px;
+      bottom: 80px;
+      background: rgba(255, 180, 195, 0.3);
+    }
+
+    /* Башкы бет */
+    .hero {
+      min-height: 100vh;
+      padding: 70px 20px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+    }
+
+    .hero-box {
+      width: 100%;
+      max-width: 680px;
+      padding: 42px 24px;
+      border-radius: 35px;
+      background: rgba(255,255,255,0.09);
+      border: 1px solid rgba(255,255,255,0.18);
+      backdrop-filter: blur(20px);
+      box-shadow: 0 30px 90px rgba(0,0,0,0.7);
+      animation: fadeUp 1.2s ease;
+    }
+
+    .subtitle {
+      font-size: 15px;
+      letter-spacing: 4px;
+      color: #ffd1dc;
+      text-transform: uppercase;
+      margin-bottom: 15px;
+    }
+
+    .hero h1 {
+      font-size: clamp(42px, 9vw, 76px);
+      font-family: Georgia, serif;
+      margin-bottom: 18px;
+      text-shadow: 0 0 25px rgba(255, 77, 109, 0.9);
+    }
+
+    .hero p {
+      font-size: 18px;
+      line-height: 1.7;
+      color: rgba(255,255,255,0.9);
+      margin-bottom: 25px;
+    }
+
+    .date {
+      display: inline-block;
+      padding: 13px 24px;
+      border-radius: 30px;
+      background: linear-gradient(135deg, #ff4d6d, #ff8fa3);
+      font-weight: bold;
+      box-shadow: 0 15px 35px rgba(255,77,109,0.4);
+    }
+
+    /* Кнопкалар */
+    .music-btn,
+    .top-btn {
+      position: fixed;
+      right: 18px;
+      width: 52px;
+      height: 52px;
+      border-radius: 50%;
+      border: none;
+      background: #ff4d6d;
+      color: white;
+      font-size: 20px;
+      cursor: pointer;
+      z-index: 50;
+      box-shadow: 0 15px 35px rgba(0,0,0,0.45);
+      transition: 0.3s;
+    }
+
+    .music-btn {
+      top: 18px;
+    }
+
+    .top-btn {
+      bottom: 18px;
+      opacity: 0;
+      pointer-events: none;
+    }
+
+    .top-btn.show {
+      opacity: 1;
+      pointer-events: auto;
+    }
+
+    .music-btn:hover,
+    .top-btn:hover {
+      transform: scale(1.08);
+      background: #ff2f5f;
+    }
+
+    /* Карточкалар */
+    .container {
+      padding: 35px 18px 70px;
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 30px;
+      justify-items: center;
+    }
+
+    .card {
+      width: 100%;
+      max-width: 430px;
+      border-radius: 30px;
+      overflow: hidden;
+      background: rgba(255,255,255,0.1);
+      border: 1px solid rgba(255,255,255,0.16);
+      backdrop-filter: blur(20px);
+      box-shadow: 0 25px 70px rgba(0,0,0,0.65);
+      transform: translateY(70px);
+      opacity: 0;
+      transition: 0.8s ease;
+    }
+
+    .card.show {
+      transform: translateY(0);
+      opacity: 1;
+    }
+
+    .card img {
+      width: 100%;
+      height: 350px;
+      object-fit: cover;
+      display: block;
+      transition: 0.5s;
+    }
+
+    .card:hover img {
+      transform: scale(1.05);
+    }
+
+    .content {
+      padding: 22px;
+    }
+
+    .content h2 {
+      font-size: 25px;
+      font-family: Georgia, serif;
+      margin-bottom: 10px;
+    }
+
+    .content p {
+      font-size: 16px;
+      line-height: 1.6;
+      color: rgba(255,255,255,0.88);
+    }
+
+    .countdown {
+      margin-top: 15px;
+      padding: 14px;
+      border-radius: 18px;
+      background: rgba(255,255,255,0.13);
+      color: #ffdce5;
+      font-weight: bold;
+      font-size: 17px;
+    }
+
+    .btn {
+      margin-top: 16px;
+      display: inline-block;
+      padding: 12px 22px;
+      border-radius: 30px;
+      background: linear-gradient(135deg, #ff4d6d, #ff8fa3);
+      color: white;
+      border: none;
+      font-weight: bold;
+      cursor: pointer;
+      text-decoration: none;
+      box-shadow: 0 12px 30px rgba(255,77,109,0.35);
+      transition: 0.3s;
+    }
+
+    .btn:hover {
+      transform: translateY(-3px);
+    }
+
+    .footer {
+      text-align: center;
+      padding: 30px 20px 60px;
+      color: rgba(255,255,255,0.75);
+    }
+
+    .glow {
+      animation: glow 2s infinite alternate;
+    }
+
+    @keyframes glow {
+      from {
+        text-shadow: 0 0 10px #ff4d6d;
+      }
+      to {
+        text-shadow: 0 0 30px #ffb3c1;
+      }
+    }
+
+    @keyframes fadeUp {
+      from {
+        opacity: 0;
+        transform: translateY(35px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    @media (min-width: 900px) {
+      .container {
+        grid-template-columns: repeat(2, minmax(300px, 430px));
+      }
+
+      .card:nth-child(odd) {
+        margin-top: 45px;
+      }
+    }
+
+    @media (max-width: 480px) {
+      .hero-box {
+        padding: 34px 18px;
+      }
+
+      .card img {
+        height: 300px;
+      }
+
+      .content h2 {
+        font-size: 22px;
+      }
+
+      .music-btn,
+      .top-btn {
+        width: 48px;
+        height: 48px;
+        right: 12px;
+      }
+    }
+  </style>
+</head>
+
+<body>
+
+  <div class="bg"></div>
+  <div class="blur-light"></div>
+  <div class="blur-light two"></div>
+
+  <!-- Музыка: өз mp3 файлың болсо ушул жерге кой -->
+  <audio id="music" loop>
+    <source src="https://cdn.pixabay.com/download/audio/2022/03/15/audio_c8c8a73467.mp3?filename=romantic-piano-ambient-11069.mp3" type="audio/mpeg">
+  </audio>
+
+  <button class="music-btn" id="musicBtn" onclick="toggleMusic()">🎵</button>
+  <button class="top-btn" id="topBtn" onclick="scrollToTop()">⬆</button>
+
+  <section class="hero">
+    <div class="hero-box">
+      <div class="subtitle">Үйлөнүү тоюна чакыруу</div>
+      <h1 class="glow">Байэл & Диля</h1>
+      <p>
+        Сизди биздин эң бактылуу күнүбүздө бирге болууга чакырабыз.
+        Кубанычыбызды бөлүшүп, майрамыбыздын күбөсү болуп бериңиз.
+      </p>
+      <div class="date">💍 22-июнь 2026 · 17:00</div>
+    </div>
+  </section>
+
+  <main class="container">
+
+    <div class="card">
+      <img src="https://images.unsplash.com/photo-1511285560929-80b456fea0bc?auto=format&fit=crop&w=900&q=80" alt="Үйлөнүү шакеги">
+      <div class="content">
+        <h2 class="glow">Байэл & Диля ❤️</h2>
+        <p>Сүйүү — бул эки жүрөктүн бир өмүргө карай жасаган эң сулуу кадамы.</p>
+      </div>
+    </div>
+
+    <div class="card">
+      <img src="https://images.unsplash.com/photo-1523438885200-e635ba2c371e?auto=format&fit=crop&w=900&q=80" alt="Күйөө жана колукту">
+      <div class="content">
+        <h2>Жаңы өмүрдүн башталышы</h2>
+        <p>Бул күн биз үчүн өзгөчө. Сиз менен бирге болсо дагы да маанилүү болот.</p>
+      </div>
+    </div>
+
+    <div class="card">
+      <img src="https://images.unsplash.com/photo-1464366400600-7168b8af9bc3?auto=format&fit=crop&w=900&q=80" alt="Майрамдык зал">
+      <div class="content">
+        <h2>📅 22-июнь 2026</h2>
+        <p>⏰ Башталышы: 17:00</p>
+        <div class="countdown" id="countdown">Эсептелүүдө...</div>
+      </div>
+    </div>
+
+    <div class="card">
+      <img src="https://images.unsplash.com/photo-1529634597503-139d3726fed5?auto=format&fit=crop&w=900&q=80" alt="Гүлдөр">
+      <div class="content">
+        <h2>Унутулгус күн</h2>
+        <p>Бул кеч жылуу сөздөр, жакшы тилектер жана жагымдуу маанай менен өтөт.</p>
+      </div>
+    </div>
+
+    <div class="card">
+      <img src="https://images.unsplash.com/photo-1519167758481-83f550bb49b3?auto=format&fit=crop&w=900&q=80" alt="Ресторан">
+      <div class="content">
+        <h2>📍 Зухра рестораны</h2>
+        <p>Ош шаары. Сиздерди белгиленген убакытта чыдамсыздык менен күтөбүз.</p>
+        <button class="btn" onclick="openMap()">Картадан ачуу</button>
+      </div>
+    </div>
+
+    <div class="card">
+      <img src="https://images.unsplash.com/photo-1509610973147-232dfea52a97?auto=format&fit=crop&w=900&q=80" alt="Колукту">
+      <div class="content">
+        <h2>Сизди күтөбүз 💍</h2>
+        <p>Биздин кубанычыбызды бөлүшүп, ушул күндү дагы да кооз кылыңыз.</p>
+      </div>
+    </div>
+
+    <div class="card">
+      <img src="https://images.unsplash.com/photo-1520854221256-17451cc331bf?auto=format&fit=crop&w=900&q=80" alt="Үйлөнүү тою">
+      <div class="content">
+        <h2 class="glow">22.06.2026 ❤️</h2>
+        <p>Бул күн — сүйүүнүн, бакыттын жана жаңы үй-бүлөнүн күнү.</p>
+      </div>
+    </div>
+
+  </main>
+
+  <footer class="footer">
+    Байэл & Диля · Сиздерди майрамыбызда күтөбүз ❤️
+  </footer>
+
+  <script>
+    const music = document.getElementById("music");
+    const musicBtn = document.getElementById("musicBtn");
+    const topBtn = document.getElementById("topBtn");
+    const cards = document.querySelectorAll(".card");
+    const countdown = document.getElementById("countdown");
+
+    let isMusicPlaying = false;
+
+    function toggleMusic() {
+      if (!isMusicPlaying) {
+        music.play()
+          .then(() => {
+            isMusicPlaying = true;
+            musicBtn.textContent = "⏸";
+          })
+          .catch(() => {
+            alert("Музыка браузер тарабынан бөгөттөлдү. Кнопканы кайра басып көрүңүз.");
+          });
+      } else {
+        music.pause();
+        isMusicPlaying = false;
+        musicBtn.textContent = "🎵";
+      }
+    }
+
+    function scrollToTop() {
+      window.scrollTo({
+        top: 0,
+        behavior: "smooth"
+      });
+    }
+
+    function openMap() {
+      window.open("https://www.google.com/maps/search/?api=1&query=Zuhra+restaurant+Osh", "_blank");
+    }
+
+    function showCards() {
+      cards.forEach(card => {
+        const top = card.getBoundingClientRect().top;
+
+        if (top < window.innerHeight - 80) {
+          card.classList.add("show");
+        }
+      });
+
+      if (window.scrollY > 450) {
+        topBtn.classList.add("show");
+      } else {
+        topBtn.classList.remove("show");
+      }
+    }
+
+    function updateCountdown() {
+      const target = new Date("2026-06-22T17:00:00+06:00").getTime();
+      const now = new Date().getTime();
+      const diff = target - now;
+
+      if (diff <= 0) {
+        countdown.innerHTML = "🎉 Бүгүн майрам күнү!";
+        return;
+      }
+
+      const days = Math.floor(diff / (1000 * 60 * 60 * 24));
+      const hours = Math.floor((diff / (1000 * 60 * 60)) % 24);
+      const minutes = Math.floor((diff / (1000 * 60)) % 60);
+      const seconds = Math.floor((diff / 1000) % 60);
+
+      countdown.innerHTML =
+        `⏳ ${days} күн ${hours} саат ${minutes} мүнөт ${seconds} секунда калды`;
+    }
+
+    window.addEventListener("scroll", showCards);
+
+    window.addEventListener("load", () => {
+      showCards();
+      updateCountdown();
+    });
+
+    setInterval(updateCountdown, 1000);
+  </script>
+
+</body>
+</html>
